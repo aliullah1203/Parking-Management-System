@@ -1,0 +1,33 @@
+.about-section {
+  background: #f4f7fa;
+  padding-top: 60px;
+  padding-bottom: 60px;
+}
+
+.text-gradient {
+  background: linear-gradient(90deg, #6610f2, #0d6efd);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+}
+
+.feature-card {
+  background: linear-gradient(135deg, #0d6efd, #6610f2);
+  border-radius: 20px;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  cursor: pointer;
+  color: #fff; /* ensures text stays visible */
+}
+
+.feature-card:hover {
+  transform: translateY(-12px) scale(1.03);
+  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3);
+}
+
+.about-img {
+  max-width: 750px;
+  width: 100%;
+  border-radius: 16px;
+  object-fit: cover;
+  margin-top: 20px;
+}

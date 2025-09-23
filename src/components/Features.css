@@ -1,0 +1,75 @@
+.features-section {
+    background: #f4f7fa; /* light background */
+    padding: 60px 0;
+  }
+  
+  .text-gradient {
+    background: linear-gradient(90deg, #6610f2, #0d6efd);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
+  }
+  
+  /* Grid container for fixed 3 columns */
+  .features-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  /* Card styles - blue-purple gradient like About */
+  .feature-card {
+    background: linear-gradient(135deg, #0d6efd, #6610f2);
+    border-radius: 20px;
+    padding: 30px 20px;
+    text-align: center;
+    color: #fff;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    cursor: pointer;
+  }
+  
+  .feature-card:hover {
+    transform: translateY(-12px) scale(1.03);
+    box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Icon glow with a lighter gradient for contrast */
+  .icon-glow {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 28px;
+    color: #fff;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+    background: linear-gradient(135deg, #6610f2, #0d6efd);
+  }
+  
+  /* Card text */
+  .feature-card h5 {
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  
+  .feature-card p {
+    font-size: 0.95rem;
+  }
+  
+  /* Responsive: stack on smaller screens */
+  @media (max-width: 992px) {
+    .features-container {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .features-container {
+      grid-template-columns: 1fr;
+    }
+  }
+  
