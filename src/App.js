@@ -1,17 +1,18 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
-import Home from "./components/Home";
-import About from "./components/About";
-import Features from "./components/Features";
-import Login from "./components/Login";
-import Register from "./components/Register";
-import Dashboard from "./components/Dashboard";
-import TestEmail from "./components/TestEmail";
-import PrivateRoute from "./components/PrivateRoute";
-import DownNavbar from "./components/DownNavbar";
-import ContactUs from "./components/ContactUs";
-import UserProfile from "./components/UserProfile";
+
+import Navbar from "./components/modules/navbar";
+import Home from "./components/modules/home";
+import About from "./components/modules/about";
+import Features from "./components/modules/features";
+import Login from "./components/modules/login";
+import Register from "./components/modules/register";
+import Dashboard from "./components/modules/dashboard";
+import TestEmail from "./components/modules/testEmail";
+import PrivateRoute from "./components/modules/privateRoute";
+import DownNavbar from "./components/modules/downNavbar";
+import ContactUs from "./components/modules/contactUs";
+import UserProfile from "./components/modules/userProfile";
 
 function App() {
   const [user, setUser] = useState(localStorage.getItem("user") || null);
@@ -26,7 +27,8 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/login" element={<Login setUser={setUser} />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/contact" element={<ContactUs />} /> {/* <-- Contact Us */}
+        <Route path="/contact" element={<ContactUs />} />
+
         {/* Private Routes */}
         <Route
           path="/dashboard"
@@ -45,6 +47,7 @@ function App() {
           element={<PrivateRoute element={<UserProfile />} />}
         />
       </Routes>
+
       <DownNavbar />
     </Router>
   );

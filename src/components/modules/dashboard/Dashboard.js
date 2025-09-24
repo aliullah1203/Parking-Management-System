@@ -1,7 +1,7 @@
 // src/components/Dashboard.js
 import React, { useState, useEffect } from "react";
-import BookingModal from "./BookingModal";
-import PaymentModal from "./PaymentModal";
+import BookingModal from "../booking/BookingModal";
+import PaymentModal from "../payment/PaymentModal";
 import emailjs from "emailjs-com";
 import "./Dashboard.css";
 

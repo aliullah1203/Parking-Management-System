@@ -44,7 +44,6 @@
     font-size: 28px;
     color: #fff;
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
-    /* Remove default gradient — handled inline */
   }
   
   .feature-card h5 {

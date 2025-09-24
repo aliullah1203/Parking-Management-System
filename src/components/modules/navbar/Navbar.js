@@ -3,6 +3,11 @@ import { Link, NavLink } from "react-router-dom";
 import "./Navbar.css"; // optional custom styles
 
 function Navbar({ user, setUser }) {
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    setUser(null);
+  };
+
   return (
     <nav className="navbar navbar-expand-lg navbar-dark custom-navbar shadow-sm">
       <div className="container">
@@ -64,7 +69,6 @@ function Navbar({ user, setUser }) {
                   </NavLink>
                 </li>
 
-                {/* Profile Link */}
                 <li className="nav-item">
                   <NavLink className="nav-link" to="/profile">
                     <i className="fas fa-user-circle me-1"></i>
@@ -75,7 +79,7 @@ function Navbar({ user, setUser }) {
                 <li className="nav-item">
                   <button
                     className="btn btn-danger ms-lg-3 px-3 py-1 rounded"
-                    onClick={() => setUser(null)}
+                    onClick={handleLogout}
                   >
                     Logout
                   </button>

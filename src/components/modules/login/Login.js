@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "./Login.css";
-import parImg from "./assets/parking2.png";
+import parImg from "../../assets/images/parking2.png";
 
 function Login({ setUser }) {
   const [email, setEmail] = useState("");

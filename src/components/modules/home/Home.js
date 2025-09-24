@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "./Home.css"; // optional for extra custom styles
-import parImg from "./assets/parking.png";
+import "./Home.css";
+import parImg from "../../assets/images/parking.png";
 
 function Home() {
   return (

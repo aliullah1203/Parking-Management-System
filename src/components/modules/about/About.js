@@ -11,7 +11,7 @@ import {
   FaSoap,
 } from "react-icons/fa";
 import "./About.css";
-import parImg from "./assets/parking.png";
+import parImg from "../../assets/images/parking.png";
 
 function About() {
   return (

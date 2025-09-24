@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Register.css";
-import bgImg from "./assets/parking2.png"; // your background image
+import bgImg from "../../assets/images/parking2.png";
 
 function Register({ setUser }) {
   const navigate = useNavigate();
