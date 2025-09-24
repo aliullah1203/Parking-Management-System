@@ -36,38 +36,6 @@ function Home() {
           }}
         />
       </div>
-
-      {/* Info Cards Section */}
-      <div className="container mt-5">
-        <div className="row text-center">
-          <div className="col-md-4 mb-4">
-            <div className="card p-4 shadow h-100">
-              <i className="fas fa-car fa-3x mb-3 text-primary"></i>
-              <h5>Easy Slot Booking</h5>
-              <p>Book your parking slot in seconds without waiting in line.</p>
-            </div>
-          </div>
-          <div className="col-md-4 mb-4">
-            <div className="card p-4 shadow h-100">
-              <i className="fas fa-clock fa-3x mb-3 text-primary"></i>
-              <h5>Time Management</h5>
-              <p>
-                Get reminders 30 minutes before your slot expires to extend
-                time.
-              </p>
-            </div>
-          </div>
-          <div className="col-md-4 mb-4">
-            <div className="card p-4 shadow h-100">
-              <i className="fas fa-wallet fa-3x mb-3 text-primary"></i>
-              <h5>Secure Payments</h5>
-              <p>
-                Pay conveniently via bKash, Rocket, or Card with full security.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

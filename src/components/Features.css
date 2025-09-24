@@ -1,5 +1,5 @@
 .features-section {
-    background: #f4f7fa; /* light background */
+    background: #f4f7fa;
     padding: 60px 0;
   }
   
@@ -10,7 +10,6 @@
     font-weight: 700;
   }
   
-  /* Grid container for fixed 3 columns */
   .features-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -19,9 +18,7 @@
     margin: 0 auto;
   }
   
-  /* Card styles - blue-purple gradient like About */
   .feature-card {
-    background: linear-gradient(135deg, #0d6efd, #6610f2);
     border-radius: 20px;
     padding: 30px 20px;
     text-align: center;
@@ -30,12 +27,12 @@
     cursor: pointer;
   }
   
+  /* Remove the hardcoded blue gradient */
   .feature-card:hover {
     transform: translateY(-12px) scale(1.03);
     box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3);
   }
   
-  /* Icon glow with a lighter gradient for contrast */
   .icon-glow {
     width: 70px;
     height: 70px;
@@ -47,10 +44,9 @@
     font-size: 28px;
     color: #fff;
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
-    background: linear-gradient(135deg, #6610f2, #0d6efd);
+    /* Remove default gradient — handled inline */
   }
   
-  /* Card text */
   .feature-card h5 {
     margin-bottom: 10px;
     font-weight: 600;
@@ -60,7 +56,6 @@
     font-size: 0.95rem;
   }
   
-  /* Responsive: stack on smaller screens */
   @media (max-width: 992px) {
     .features-container {
       grid-template-columns: repeat(2, 1fr);

@@ -1,26 +1,31 @@
 .slot-card {
-    border-radius: 15px;
-    transition: transform 0.3s, box-shadow 0.3s;
-    padding: 1.5rem 0.5rem;
-  }
-  
-  .slot-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-  }
-  
-  .available-slot {
-    background: linear-gradient(135deg, #d4edda, #a8e6cf);
-  }
-  
-  .unavailable-slot {
-    background: linear-gradient(135deg, #f8d7da, #f5c6cb);
-    color: #721c24;
-  }
-  
-  .badge {
-    font-size: 0.9rem;
-    padding: 0.5rem 0.75rem;
-    border-radius: 10px;
-  }
-  
+  border-radius: 15px;
+  transition: transform 0.3s, box-shadow 0.3s;
+  padding: 1.5rem 0.5rem;
+
+  /* Make all cards equal height */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* space out content */
+  min-height: 220px; /* adjust according to your content */
+}
+
+.slot-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+.available-slot {
+  background: linear-gradient(135deg, #d4edda, #a8e6cf);
+}
+
+.unavailable-slot {
+  background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+  color: #721c24;
+}
+
+.badge {
+  font-size: 0.9rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 10px;
+}

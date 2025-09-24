@@ -16,7 +16,7 @@
   border-radius: 20px;
   transition: transform 0.4s ease, box-shadow 0.4s ease;
   cursor: pointer;
-  color: #fff; /* ensures text stays visible */
+  color: #fff; 
 }
 
 .feature-card:hover {

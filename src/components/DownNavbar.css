@@ -1,0 +1,64 @@
+.down-navbar {
+    background-color: #0d6efd; /* primary blue */
+    color: #fff;
+    font-family: 'Segoe UI', sans-serif;
+    padding-top: 40px; /* top padding for content */
+    padding-bottom: 30px; /* bottom padding for copyright */
+  }
+  
+  .footer-logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  
+  .footer-description {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.85);
+  }
+  
+  .footer-heading {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+  }
+  
+  .footer-links li {
+    margin-bottom: 8px;
+  }
+  
+  .footer-links li a {
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  
+  .footer-links li a:hover {
+    color: #ffd700; /* hover gold */
+  }
+  
+  .footer-social a {
+    color: #fff;
+    transition: color 0.3s;
+  }
+  
+  .footer-social a:hover {
+    color: #ffd700;
+  }
+  
+  .footer-divider {
+    border: none; /* remove default border */
+    height: 3px; /* make it thicker */
+    background-color: rgba(255, 255, 255, 0.6); /* white-ish color */
+    margin: 30px 0; /* vertical spacing above and below */
+    border-radius: 2px; /* optional: rounded edges */
+  }
+  
+  
+  .copyright {
+    text-align: center;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.95);
+    margin-top: 10px;
+  }
+  

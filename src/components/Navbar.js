@@ -63,6 +63,15 @@ function Navbar({ user, setUser }) {
                     Dashboard
                   </NavLink>
                 </li>
+
+                {/* Profile Link */}
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/profile">
+                    <i className="fas fa-user-circle me-1"></i>
+                    Profile
+                  </NavLink>
+                </li>
+
                 <li className="nav-item">
                   <button
                     className="btn btn-danger ms-lg-3 px-3 py-1 rounded"

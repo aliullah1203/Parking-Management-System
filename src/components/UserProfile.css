@@ -1,0 +1,132 @@
+.user-profile-container {
+    min-height: 100vh;
+    background: #f8f9fa;
+    padding: 30px;
+  }
+  
+  .profile-form-card,
+  .profile-preview-card {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  
+  .card-header.bg-gradient {
+    background: linear-gradient(135deg, #6610f2, #0d6efd);
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: 600;
+    padding: 15px;
+    text-align: center;
+  }
+  
+  .profile-image {
+    width: 180px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 5px solid #fff;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+    margin-bottom: 15px;
+  }
+  
+  .profile-placeholder {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #adb5bd;
+    font-size: 1rem;
+    margin-bottom: 15px;
+  }
+  
+  .card-body {
+    padding: 20px;
+  }
+  
+  .card-body p {
+    font-size: 1rem;
+    color: #495057;
+  }
+  
+  .card-body h5 {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .profile-preview-header {
+    text-align: center;
+    margin-bottom: 15px;
+  }
+  
+  .profile-preview-header h5 {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+  
+  .profile-preview-header p {
+    font-size: 1rem;
+    color: #6c757d;
+  }
+  
+  form .form-label {
+    font-weight: 500;
+  }
+  
+  form .btn-primary {
+    background: linear-gradient(135deg, #6610f2, #0d6efd);
+    border: none;
+  }
+  
+  @media (min-width: 992px) {
+    .profile-columns {
+      display: flex;
+      gap: 30px;
+    }
+  
+    .profile-form-card,
+    .profile-preview-card {
+      flex: 1;
+    }
+  }
+  .profile-info {
+    text-align: left;
+    padding: 0 20px;
+  }
+  
+  .profile-info h5 {
+    font-size: 1.4rem;
+    color: #343a40;
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+  }
+  
+  .profile-detail {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #f1f3f5;
+  }
+  
+  .profile-detail:last-child {
+    border-bottom: none;
+  }
+  
+  .profile-detail .label {
+    font-weight: 500;
+    color: #495057;
+  }
+  
+  .profile-detail .value {
+    color: #212529;
+    font-weight: 400;
+  }
+    

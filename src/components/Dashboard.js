@@ -132,6 +132,7 @@ function Dashboard({ user }) {
                 >
                   {slot.available ? "Available" : "Booked"}
                 </span>
+                <br />
 
                 {!slot.available && (
                   <div className="mt-2">
