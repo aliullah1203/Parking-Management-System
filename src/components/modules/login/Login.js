@@ -8,20 +8,39 @@ function Login({ setUser }) {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    if (
-      (email === "aliullah0301@gmail.com" ||
-        email === "aliullah15555@gmail.com") &&
-      password === "aliullah"
-    ) {
-      localStorage.setItem("isLoggedIn", "true");
-      localStorage.setItem("user", email);
+    try {
+      const res = await fetch("http://localhost:8080/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.error || "Invalid email or password");
+        return;
+      }
+
+      // Store JWT tokens in localStorage
+      // localStorage.setItem("accessToken", data.access_token);
+      // localStorage.setItem("refreshToken", data.refresh_token);
+      // localStorage.setItem("user", email);
+
+      localStorage.setItem("accessToken", data.access_token);
+      localStorage.setItem("refreshToken", data.refresh_token);
+
+      // ✅ Store full user object for profile use
+      localStorage.setItem("loggedInUser", JSON.stringify(data.user));
+
       setUser(email);
       navigate("/dashboard");
-    } else {
-      alert("Invalid email or password. Please try again.");
+    } catch (err) {
+      console.error(err);
+      alert("Server error. Please try again.");
     }
   };
 

@@ -1,24 +1,40 @@
-// src/components/Dashboard.js
 import React, { useState, useEffect } from "react";
 import BookingModal from "../booking/BookingModal";
 import PaymentModal from "../payment/PaymentModal";
 import emailjs from "emailjs-com";
 import "./Dashboard.css";
 
-function Dashboard({ user }) {
-  const [slots, setSlots] = useState([
-    { id: 1, available: true, startTime: null, endTime: null, notified: false },
-    { id: 2, available: true, startTime: null, endTime: null, notified: false },
-    { id: 3, available: true, startTime: null, endTime: null, notified: false },
-    { id: 4, available: true, startTime: null, endTime: null, notified: false },
-    { id: 5, available: true, startTime: null, endTime: null, notified: false },
-    { id: 6, available: true, startTime: null, endTime: null, notified: false },
-  ]);
+function Dashboard({ user: propUser, setUser }) {
+  const [slots, setSlots] = useState(
+    Array.from({ length: 6 }, (_, i) => ({
+      id: i + 1,
+      available: true,
+      startTime: null,
+      endTime: null,
+      notified: false,
+    }))
+  );
 
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [showBooking, setShowBooking] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [user, setLocalUser] = useState(null);
+
+  // Load user from props or localStorage
+  useEffect(() => {
+    if (propUser) {
+      setLocalUser(propUser);
+      localStorage.setItem("loggedInUser", JSON.stringify(propUser));
+    } else {
+      const storedUser = localStorage.getItem("loggedInUser");
+      if (storedUser) {
+        const parsedUser = JSON.parse(storedUser);
+        setLocalUser(parsedUser);
+        setUser && setUser(parsedUser);
+      }
+    }
+  }, [propUser, setUser]);
 
   // Update current time every second
   useEffect(() => {
@@ -28,32 +44,30 @@ function Dashboard({ user }) {
 
   // 30-minute email notification
   useEffect(() => {
-    if (!user) return; // only send if user email exists
+    if (!user?.email) return;
 
     slots.forEach((slot) => {
       if (!slot.available && slot.endTime && !slot.notified) {
         const remainingMin = (new Date(slot.endTime) - currentTime) / 60000;
 
         if (remainingMin <= 30 && remainingMin > 0) {
-          // Send email to the logged-in user
           emailjs
             .send(
               "service_aliullah",
-              "template_ezqjq7b", // your template ID
+              "template_ezqjq7b",
               {
-                to_email: user, // logged-in user email
+                to_email: user.email,
                 slot_id: slot.id,
                 remaining_time: Math.floor(remainingMin),
               },
-              "5XfTZlvUzh8R2dR1V" // your public key
+              "5XfTZlvUzh8R2dR1V"
             )
-
             .then(
-              () => console.log(`Email sent to ${user} for slot ${slot.id}`),
+              () =>
+                console.log(`Email sent to ${user.email} for slot ${slot.id}`),
               (error) => console.error("Email error:", error)
             );
 
-          // Mark as notified to avoid sending again
           setSlots((prevSlots) =>
             prevSlots.map((s) =>
               s.id === slot.id ? { ...s, notified: true } : s
@@ -111,7 +125,8 @@ function Dashboard({ user }) {
       <div className="text-center mb-5">
         <h2 className="fw-bold display-5">Parking Dashboard</h2>
         <p className="lead text-muted">
-          Welcome, {user}! Choose your parking slot below.
+          Welcome, {user?.name ? user.name : user?.email}! Choose your parking
+          slot below.
         </p>
       </div>
 
@@ -132,7 +147,6 @@ function Dashboard({ user }) {
                 >
                   {slot.available ? "Available" : "Booked"}
                 </span>
-                <br />
 
                 {!slot.available && (
                   <div className="mt-2">

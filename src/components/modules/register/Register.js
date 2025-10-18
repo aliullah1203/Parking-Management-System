@@ -18,7 +18,7 @@ function Register({ setUser }) {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
 
     if (form.password !== form.confirmPassword) {
@@ -26,9 +26,39 @@ function Register({ setUser }) {
       return;
     }
 
-    localStorage.setItem("registeredUser", JSON.stringify(form));
-    alert("Account created successfully! Please login.");
-    navigate("/login");
+    try {
+      const payload = {
+        ...form,
+        phone: form.contact, // map to backend field
+      };
+      delete payload.contact;
+
+      const res = await fetch("http://localhost:8080/api/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        alert(data.error || "Registration failed");
+        return;
+      }
+
+      localStorage.setItem("accessToken", data.access_token);
+      localStorage.setItem("refreshToken", data.refresh_token);
+      setUser?.(data.user);
+      alert("Account created successfully!");
+      navigate("/login");
+    } catch (err) {
+      console.error(err);
+      alert("Server error. Please try again.");
+    }
+  };
+
+  const handleGoogleLogin = () => {
+    // 1️⃣ Call your backend to get Google OAuth URL
+    window.location.href = "http://localhost:8080/api/oauth/google/login";
   };
 
   return (
@@ -80,7 +110,7 @@ function Register({ setUser }) {
             />
           </div>
 
-          {/* Contact Number */}
+          {/* Contact */}
           <div className="mb-3">
             <label className="form-label text-white">Contact Number</label>
             <input
@@ -123,10 +153,17 @@ function Register({ setUser }) {
           </div>
 
           {/* Register Button */}
-          <button type="submit" className="btn btn-primary w-100 mb-3">
+          <button type="submit" className="btn btn-primary w-100 mb-2">
             Register
           </button>
         </form>
+
+        <button
+          className="btn btn-danger w-100 mb-3"
+          onClick={handleGoogleLogin}
+        >
+          Sign Up with Google
+        </button>
 
         <p className="text-center text-white">
           Already have an account?{" "}

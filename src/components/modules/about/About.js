@@ -84,40 +84,6 @@ function About() {
 
           <div className="col-md-4 mb-4">
             <div className="card feature-card shadow-lg p-5 h-100">
-              <FaHourglassHalf size={50} className="mb-4 text-white" />
-              <h5 className="fw-bold text-white mb-3">Save Time</h5>
-              <p className="text-white">
-                Compare and book in seconds across multiple parking spots.
-                Efficiency at your fingertips.
-              </p>
-            </div>
-          </div>
-
-          <div className="col-md-4 mb-4">
-            <div className="card feature-card shadow-lg p-5 h-100">
-              <FaSmile size={50} className="mb-4 text-white" />
-              <h5 className="fw-bold text-white mb-3">Save Stress</h5>
-              <p className="text-white">
-                Relax knowing your spot is guaranteed in advance. Free
-                cancellations keep you flexible.
-              </p>
-            </div>
-          </div>
-
-          {/* New Feature Cards */}
-          <div className="col-md-4 mb-4">
-            <div className="card feature-card shadow-lg p-5 h-100">
-              <FaWalking size={50} className="mb-4 text-white" />
-              <h5 className="fw-bold text-white mb-3">Close And Handy</h5>
-              <p className="text-white">
-                Park at the terminal – just a short walk and you are at your
-                departure gate.
-              </p>
-            </div>
-          </div>
-
-          <div className="col-md-4 mb-4">
-            <div className="card feature-card shadow-lg p-5 h-100">
               <FaConciergeBell size={50} className="mb-4 text-white" />
               <h5 className="fw-bold text-white mb-3">Concierge Options</h5>
               <p className="text-white">
