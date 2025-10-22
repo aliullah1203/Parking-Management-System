@@ -4,9 +4,6 @@ import {
   FaClock,
   FaShieldAlt,
   FaMoneyBillWave,
-  FaHourglassHalf,
-  FaSmile,
-  FaWalking,
   FaConciergeBell,
   FaSoap,
 } from "react-icons/fa";

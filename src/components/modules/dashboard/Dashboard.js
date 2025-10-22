@@ -2,194 +2,179 @@ import React, { useState, useEffect } from "react";
 import BookingModal from "../booking/BookingModal";
 import PaymentModal from "../payment/PaymentModal";
 import emailjs from "emailjs-com";
+import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
 
-function Dashboard({ user: propUser, setUser }) {
-  const [slots, setSlots] = useState(
-    Array.from({ length: 6 }, (_, i) => ({
-      id: i + 1,
-      available: true,
-      startTime: null,
-      endTime: null,
-      notified: false,
-    }))
-  );
+const SERVICE_ID = "service_2qnaxle";
+const TEMPLATE_ID = "template_kefhnlb";
+const PUBLIC_KEY = "ChF5CwUuY3qdC1YIb";
 
+export default function Dashboard({ user, setUser, slots, setSlots }) {
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [showBooking, setShowBooking] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
-  const [currentTime, setCurrentTime] = useState(new Date());
-  const [user, setLocalUser] = useState(null);
+  const [time, setTime] = useState(new Date());
+  const navigate = useNavigate();
 
-  // Load user from props or localStorage
+  // Live Clock
   useEffect(() => {
-    if (propUser) {
-      setLocalUser(propUser);
-      localStorage.setItem("loggedInUser", JSON.stringify(propUser));
-    } else {
-      const storedUser = localStorage.getItem("loggedInUser");
-      if (storedUser) {
-        const parsedUser = JSON.parse(storedUser);
-        setLocalUser(parsedUser);
-        setUser && setUser(parsedUser);
-      }
-    }
-  }, [propUser, setUser]);
-
-  // Update current time every second
-  useEffect(() => {
-    const interval = setInterval(() => setCurrentTime(new Date()), 1000);
-    return () => clearInterval(interval);
+    const t = setInterval(() => setTime(new Date()), 1000);
+    return () => clearInterval(t);
   }, []);
 
-  // 30-minute email notification
+  // Auto-reset expired slots + Send reminder emails
   useEffect(() => {
-    if (!user?.email) return;
+    const updatedSlots = slots.map((slot) => {
+      if (!slot.available && slot.end && new Date(slot.end) <= time) {
+        return {
+          ...slot,
+          available: true,
+          start: null,
+          end: null,
+          email: null,
+          notified: false,
+        };
+      }
 
-    slots.forEach((slot) => {
-      if (!slot.available && slot.endTime && !slot.notified) {
-        const remainingMin = (new Date(slot.endTime) - currentTime) / 60000;
-
-        if (remainingMin <= 30 && remainingMin > 0) {
+      if (!slot.available && !slot.notified && slot.end) {
+        const remaining = (new Date(slot.end) - time) / 60000;
+        if (remaining > 0 && remaining <= 30) {
           emailjs
             .send(
-              "service_aliullah",
-              "template_ezqjq7b",
+              SERVICE_ID,
+              TEMPLATE_ID,
               {
-                to_email: user.email,
+                to_email: slot.email,
                 slot_id: slot.id,
-                remaining_time: Math.floor(remainingMin),
+                remaining_time: Math.floor(remaining),
               },
-              "5XfTZlvUzh8R2dR1V"
+              PUBLIC_KEY
             )
-            .then(
-              () =>
-                console.log(`Email sent to ${user.email} for slot ${slot.id}`),
-              (error) => console.error("Email error:", error)
-            );
-
-          setSlots((prevSlots) =>
-            prevSlots.map((s) =>
-              s.id === slot.id ? { ...s, notified: true } : s
-            )
-          );
+            .then(() => console.log(`✅ Reminder sent for slot ${slot.id}`))
+            .catch((e) => console.error("❌ Email failed:", e));
+          return { ...slot, notified: true };
         }
       }
+      return slot;
     });
-  }, [currentTime, slots, user]);
 
-  if (!user) {
-    return (
-      <div className="container mt-5 text-center">
-        <h2>Please login to access the Dashboard.</h2>
-      </div>
-    );
-  }
+    if (JSON.stringify(updatedSlots) !== JSON.stringify(slots)) {
+      setSlots(updatedSlots);
+    }
+  }, [time, slots, setSlots]);
 
   const handleBook = (slot) => {
     setSelectedSlot(slot);
     setShowBooking(true);
   };
 
-  const handlePaymentSuccess = (slotId, startTime, endTime) => {
-    setSlots((prevSlots) =>
-      prevSlots.map((s) =>
-        s.id === slotId
-          ? { ...s, available: false, startTime, endTime, notified: false }
+  const handlePaymentSuccess = (id, start, end, email) => {
+    setSlots((prev) =>
+      prev.map((s) =>
+        s.id === id
+          ? { ...s, available: false, start, end, notified: false, email }
           : s
       )
     );
     setShowPayment(false);
-    setSelectedSlot(null);
+    navigate(`/slot/${id}`);
   };
 
-  const formatTime = (time) =>
-    time
-      ? new Date(time).toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        })
-      : "-";
-
-  const getRemainingTime = (endTime) => {
-    if (!endTime) return "-";
-    const diff = new Date(endTime) - currentTime;
-    if (diff <= 0) return "Expired";
-    const minutes = Math.floor(diff / 60000);
-    const seconds = Math.floor((diff % 60000) / 1000);
-    return `${minutes}m ${seconds}s`;
-  };
+  const availableSlots = slots.filter((s) => s.available).map((s) => s.id);
+  const bookedSlots = slots.filter((s) => !s.available).map((s) => s.id);
 
   return (
-    <div className="container mt-5">
-      <div className="text-center mb-5">
-        <h2 className="fw-bold display-5">Parking Dashboard</h2>
-        <p className="lead text-muted">
-          Welcome, {user?.name ? user.name : user?.email}! Choose your parking
-          slot below.
+    <div className="dashboard-container">
+      {/* Header */}
+      <header className="dashboard-header text-center mb-5">
+        <h1>🚗 Parking Management Dashboard</h1>
+        <p className="subtitle">
+          Welcome back, <strong>{user?.name || user?.email || "Guest"}</strong>{" "}
+          👋
         </p>
-      </div>
+        <p className="time-display">{time.toLocaleTimeString()}</p>
+      </header>
 
-      <div className="row">
+      {/* Summary Section */}
+      <section className="status-summary mb-5">
+        <h3 className="section-title">📊 Parking Slot Summary</h3>
+        <div className="summary-table shadow-sm">
+          <table>
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Slots</th>
+                <th>Count</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <span className="status-dot white"></span> Available (White)
+                </td>
+                <td>{availableSlots.join(", ") || "None"}</td>
+                <td>{availableSlots.length}</td>
+              </tr>
+              <tr>
+                <td>
+                  <span className="status-dot red"></span> Booked (Red)
+                </td>
+                <td>{bookedSlots.join(", ") || "None"}</td>
+                <td>{bookedSlots.length}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      {/* Slot Grid */}
+      <section className="slot-grid">
         {slots.map((slot) => (
-          <div className="col-md-4 mb-4" key={slot.id}>
-            <div
-              className={`card slot-card shadow ${
-                slot.available ? "available-slot" : "unavailable-slot"
-              }`}
-            >
-              <div className="card-body text-center">
-                <h5 className="card-title">Slot {slot.id}</h5>
-                <span
-                  className={`badge ${
-                    slot.available ? "bg-success" : "bg-danger"
-                  } mb-3`}
-                >
-                  {slot.available ? "Available" : "Booked"}
-                </span>
+          <div
+            key={slot.id}
+            className={`slot-card ${slot.available ? "available" : "booked"}`}
+          >
+            <h4>Slot {slot.id}</h4>
+            <p className={`status-label ${slot.available ? "green" : "red"}`}>
+              {slot.available ? "Available" : "Booked"}
+            </p>
 
-                {!slot.available && (
-                  <div className="mt-2">
-                    <p className="mb-1">Start: {formatTime(slot.startTime)}</p>
-                    <p className="mb-1">End: {formatTime(slot.endTime)}</p>
-                    <p className="mb-1">
-                      Remaining: {getRemainingTime(slot.endTime)}
-                    </p>
-                  </div>
-                )}
-
-                {slot.available && (
-                  <button
-                    className="btn btn-primary btn-sm mt-2"
-                    onClick={() => handleBook(slot)}
-                  >
-                    Book Now
-                  </button>
-                )}
-              </div>
-            </div>
+            {slot.available ? (
+              <button className="btn book-btn" onClick={() => handleBook(slot)}>
+                Book Now
+              </button>
+            ) : (
+              <button
+                className="btn details-btn"
+                onClick={() => navigate(`/slot/${slot.id}`)}
+              >
+                View Details
+              </button>
+            )}
           </div>
         ))}
-      </div>
+      </section>
 
-      {showBooking && selectedSlot && (
+      {/* Modals */}
+      {showBooking && (
         <BookingModal
           slot={selectedSlot}
           setShowBooking={setShowBooking}
           setShowPayment={setShowPayment}
           setSelectedSlot={setSelectedSlot}
+          userId={user?.id}
+          userEmail={user?.email}
         />
       )}
 
-      {showPayment && selectedSlot && (
+      {showPayment && (
         <PaymentModal
           slot={selectedSlot}
           setShowPayment={setShowPayment}
           onPaymentSuccess={handlePaymentSuccess}
+          userEmail={user?.email}
         />
       )}
     </div>
   );
 }
-
-export default Dashboard;

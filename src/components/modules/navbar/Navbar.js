@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
-import "./Navbar.css"; // optional custom styles
+import "./Navbar.css";
 
 function Navbar({ user, setUser }) {
   const handleLogout = () => {
@@ -37,6 +37,11 @@ function Navbar({ user, setUser }) {
             <li className="nav-item">
               <NavLink className="nav-link" to="/about">
                 About
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/author">
+                Author
               </NavLink>
             </li>
             <li className="nav-item">

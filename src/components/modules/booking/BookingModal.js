@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 
-function BookingModal({
+export default function BookingModal({
   slot,
   setShowBooking,
   setShowPayment,
   setSelectedSlot,
+  userId,
+  userEmail,
 }) {
   const [duration, setDuration] = useState(60);
   const [error, setError] = useState("");
@@ -14,12 +16,10 @@ function BookingModal({
       setError("Minimum booking duration is 30 minutes.");
       return;
     }
+    const start = new Date();
+    const end = new Date(start.getTime() + duration * 60000);
 
-    const startTime = new Date();
-    const endTime = new Date(startTime.getTime() + duration * 60000);
-
-    // Save times to selectedSlot for PaymentModal
-    setSelectedSlot({ ...slot, startTime, endTime });
+    setSelectedSlot({ ...slot, start, end, userId, email: userEmail });
 
     setShowBooking(false);
     setShowPayment(true);
@@ -28,11 +28,10 @@ function BookingModal({
   return (
     <div
       className="modal fade show d-block"
-      style={{ backgroundColor: "rgba(0, 0, 0, 0.6)" }}
+      style={{ backgroundColor: "rgba(0,0,0,0.6)" }}
     >
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content shadow-lg border-0 rounded-4">
-          {/* Modal Header */}
           <div className="modal-header bg-primary text-white rounded-top-4">
             <h5 className="modal-title">Book Slot #{slot.id}</h5>
             <button
@@ -41,8 +40,6 @@ function BookingModal({
               onClick={() => setShowBooking(false)}
             ></button>
           </div>
-
-          {/* Modal Body */}
           <div className="modal-body">
             <div className="mb-3">
               <label htmlFor="duration" className="form-label">
@@ -53,15 +50,15 @@ function BookingModal({
                 id="duration"
                 className="form-control"
                 value={duration}
-                onChange={(e) => {
-                  setDuration(parseInt(e.target.value));
-                  if (parseInt(e.target.value) >= 30) setError("");
-                }}
                 min={30}
+                onChange={(e) => {
+                  const val = parseInt(e.target.value);
+                  setDuration(val);
+                  if (val >= 30) setError("");
+                }}
               />
               {error && <div className="text-danger mt-1">{error}</div>}
             </div>
-
             <p className="text-muted">
               Start Time: <strong>{new Date().toLocaleTimeString()}</strong>
             </p>
@@ -72,8 +69,6 @@ function BookingModal({
               </strong>
             </p>
           </div>
-
-          {/* Modal Footer */}
           <div className="modal-footer">
             <button
               className="btn btn-secondary"
@@ -90,5 +85,3 @@ function BookingModal({
     </div>
   );
 }
-
-export default BookingModal;

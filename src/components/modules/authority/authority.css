@@ -1,0 +1,89 @@
+
+.collection-container {
+  padding: 50px 20px;
+  background-color: #f8f9fa; /* light gray background */
+  font-family: "Arial", sans-serif;
+}
+
+/* Titles */
+.collection-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #343a40;
+}
+
+.collection-subtitle {
+  font-size: 1.5rem;
+  color: #6c757d;
+  margin-bottom: 60px;
+  line-height: 1.5;
+}
+
+/* Team boxes */
+.collection-box {
+  background-color: #ffffff;
+  border-radius: 15px;
+  padding: 20px 15px;
+  width: 100%;
+  max-width: 250px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.collection-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Team image */
+.collection-icon {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 15px;
+  border: 3px solid #007bff; /* optional accent border */
+}
+
+/* Team info */
+.collection-info h5 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #343a40;
+  margin-bottom: 10px;
+}
+
+.collection-info p {
+  font-size: 0.9rem;
+  color: #6c757d;
+  line-height: 1.4;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .collection-box {
+    max-width: 220px;
+    padding: 15px 10px;
+  }
+
+  .collection-icon {
+    width: 100px;
+    height: 100px;
+  }
+
+  .collection-title {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .collection-box {
+    max-width: 100%;
+  }
+
+  .collection-icon {
+    width: 90px;
+    height: 90px;
+  }
+}

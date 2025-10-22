@@ -25,22 +25,22 @@ function Login({ setUser }) {
         return;
       }
 
-      // Store JWT tokens in localStorage
-      // localStorage.setItem("accessToken", data.access_token);
-      // localStorage.setItem("refreshToken", data.refresh_token);
-      // localStorage.setItem("user", email);
-
+      // ✅ Save JWT tokens in localStorage (for Dashboard.js)
+      localStorage.setItem("token", data.access_token); // add this
       localStorage.setItem("accessToken", data.access_token);
       localStorage.setItem("refreshToken", data.refresh_token);
 
-      // ✅ Store full user object for profile use
+      // ✅ Save user info
       localStorage.setItem("loggedInUser", JSON.stringify(data.user));
 
-      setUser(email);
+      // ✅ Update parent user state
+      setUser(data.user);
+
+      // ✅ Redirect to dashboard
       navigate("/dashboard");
     } catch (err) {
-      console.error(err);
-      alert("Server error. Please try again.");
+      console.error("Login error:", err);
+      alert("Server error. Please try again later.");
     }
   };
 
@@ -62,6 +62,7 @@ function Login({ setUser }) {
         <p className="text-center text-white mb-4">
           Sign in to access your dashboard
         </p>
+
         <form onSubmit={handleLogin}>
           <div className="mb-3">
             <label className="text-white">Email</label>
@@ -74,6 +75,7 @@ function Login({ setUser }) {
               required
             />
           </div>
+
           <div className="mb-3">
             <label className="text-white">Password</label>
             <input
@@ -85,13 +87,14 @@ function Login({ setUser }) {
               required
             />
           </div>
+
           <button type="submit" className="btn btn-primary w-100 mb-3">
             Login
           </button>
         </form>
 
         <p className="text-center text-white">
-          Don't have an account?{" "}
+          Don’t have an account?{" "}
           <Link to="/register" className="fw-bold text-white">
             Create Account
           </Link>

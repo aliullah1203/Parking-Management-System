@@ -6,14 +6,14 @@ function TestEmail() {
   const sendTestEmail = () => {
     emailjs
       .send(
-        "service_aliullah", // Your Service ID
-        "template_ezqjq7b", // Your Template ID
+        "service_2qnaxle", // Your Service ID
+        "template_kefhnlb", // Your Template ID
         {
           to_email: "aliullah15555@gmail.com", // Recipient email
           slot_id: 1,
           remaining_time: 30,
         },
-        "5XfTZlvUzh8R2dR1V" // Your EmailJS Public Key
+        "ChF5CwUuY3qdC1YIb" // Your EmailJS Public Key
       )
       .then(
         (result) => alert("Test email sent!"),

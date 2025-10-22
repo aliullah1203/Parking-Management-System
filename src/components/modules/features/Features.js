@@ -44,7 +44,7 @@ function Features() {
     {
       icon: <FaShower />,
       title: "Car Wash",
-      desc: "Premium services <br> Drive up, park, and add a car wash for extra convenience.",
+      desc: "Drive up, park, and add a car wash for extra convenience.",
       gradient: "linear-gradient(135deg, #442d11ff, #219b87ff)",
     },
   ];

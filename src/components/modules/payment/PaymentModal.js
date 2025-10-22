@@ -1,149 +1,147 @@
+// src/components/payment/PaymentModal.js
 import React, { useState } from "react";
+import emailjs from "emailjs-com";
+import "./PaymentModal.css";
 
-function PaymentModal({ slot, setShowPayment, onPaymentSuccess }) {
-  const [step, setStep] = useState("select"); // select -> details -> confirm
+const SERVICE_ID = "service_2qnaxle";
+const TEMPLATE_ID = "template_odjrkda";
+const PUBLIC_KEY = "ChF5CwUuY3qdC1YIb";
+
+export default function PaymentModal({
+  slot,
+  setShowPayment,
+  onPaymentSuccess,
+}) {
   const [method, setMethod] = useState("");
   const [inputValue, setInputValue] = useState("");
+  const [email, setEmail] = useState(slot?.email || "");
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpInput, setOtpInput] = useState("");
+  const [generatedOtp, setGeneratedOtp] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleProceed = () => {
-    if (!inputValue) return alert("Please enter required information");
-    setStep("confirm");
+  if (!slot || !slot.id) return null;
+
+  const generateOtp = () => String(Math.floor(100000 + Math.random() * 900000));
+
+  const sendOtpEmail = async (email, otp) => {
+    const expiryTime = new Date(Date.now() + 15 * 60 * 1000).toLocaleString();
+    const templateParams = { to_email: email, otp, expiry_time: expiryTime };
+    return emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams, PUBLIC_KEY);
   };
 
-  const handlePay = () => {
-    alert(
-      `Payment successful for Slot ${slot.id} via ${method} (${inputValue})`
-    );
-    onPaymentSuccess(slot.id, slot.startTime, slot.endTime, method, inputValue);
-    setShowPayment(false);
-  };
+  const handleSendOtp = async () => {
+    if (!email.trim() || !method.trim() || !inputValue.trim()) {
+      return alert("Please fill all required fields.");
+    }
 
-  const renderInputField = () => {
-    if (method === "bKash" || method === "Rocket" || method === "Nagad") {
-      return (
-        <input
-          type="text"
-          className="form-control mb-3"
-          placeholder="Enter Mobile Number"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-        />
-      );
-    } else {
-      // Card or Banking
-      return (
-        <input
-          type="text"
-          className="form-control mb-3"
-          placeholder="Enter ID/Card Number"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-        />
-      );
+    const otp = generateOtp();
+    setGeneratedOtp(otp);
+    setLoading(true);
+
+    try {
+      await sendOtpEmail(email, otp);
+      setOtpSent(true);
+      alert(`✅ OTP sent to ${email}`);
+    } catch (err) {
+      console.error("❌ OTP send failed:", err);
+      alert("Failed to send OTP. Try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
-  const renderContent = () => {
-    switch (step) {
-      case "select":
-        return (
-          <div className="d-flex flex-column gap-3">
-            {["bKash", "Rocket", "Nagad", "Card"].map((pay) => (
-              <button
-                key={pay}
-                className={`btn ${
-                  pay === "Card"
-                    ? "btn-outline-dark"
-                    : pay === "bKash"
-                    ? "btn-outline-success"
-                    : "btn-outline-primary"
-                } d-flex justify-content-between align-items-center`}
-                onClick={() => {
-                  setMethod(pay);
-                  setInputValue("");
-                  setStep("details");
-                }}
-              >
-                {pay}
-              </button>
-            ))}
-          </div>
-        );
-
-      case "details":
-        return (
-          <div>
-            <p>
-              Enter your{" "}
-              {method === "Card" ? "ID/Card Number" : "Mobile Number"}:
-            </p>
-            {renderInputField()}
-            <button className="btn btn-success me-2" onClick={handleProceed}>
-              Proceed
-            </button>
-            <button
-              className="btn btn-secondary"
-              onClick={() => setStep("select")}
-            >
-              Back
-            </button>
-          </div>
-        );
-
-      case "confirm":
-        return (
-          <div>
-            <p>
-              Confirm payment for <strong>Slot #{slot.id}</strong> via{" "}
-              <strong>{method}</strong> ({inputValue})
-            </p>
-            <button className="btn btn-success me-2" onClick={handlePay}>
-              Confirm Payment
-            </button>
-            <button
-              className="btn btn-secondary"
-              onClick={() => setStep("details")}
-            >
-              Back
-            </button>
-          </div>
-        );
-
-      default:
-        return null;
+  const handleVerifyOtp = () => {
+    if (otpInput.trim() === generatedOtp) {
+      alert("✅ Payment verified! Booking confirmed.");
+      onPaymentSuccess(slot.id, slot.start, slot.end, email, inputValue); // you can store payment info
+      setShowPayment(false);
+    } else {
+      alert("❌ Invalid OTP. Please try again.");
     }
   };
 
   return (
-    <div
-      className="modal fade show d-block"
-      style={{ backgroundColor: "rgba(0, 0, 0, 0.6)" }}
-    >
-      <div className="modal-dialog modal-dialog-centered">
-        <div className="modal-content shadow-lg border-0 rounded-4 p-3">
-          {/* Header */}
+    <div className="modal-overlay" onClick={() => setShowPayment(false)}>
+      <div className="modal-dialog" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-content rounded-4 shadow-lg">
           <div className="modal-header bg-primary text-white rounded-top-4">
-            <h5 className="modal-title">
-              {step === "select" && `Payment for Slot #${slot.id}`}
-              {step === "details" &&
-                `Enter ${
-                  method === "Card" ? "ID/Card Number" : "Mobile Number"
-                }`}
-              {step === "confirm" && "Confirm Payment"}
-            </h5>
+            <h5 className="modal-title">Payment for Slot {slot.id}</h5>
             <button
               type="button"
               className="btn-close btn-close-white"
               onClick={() => setShowPayment(false)}
-            ></button>
+            />
           </div>
 
-          {/* Body */}
-          <div className="modal-body">{renderContent()}</div>
+          <div className="modal-body">
+            {!otpSent ? (
+              <>
+                <label>Email</label>
+                <input
+                  type="email"
+                  className="form-control mb-3"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+
+                <label>Payment Method</label>
+                <select
+                  className="form-select mb-3"
+                  value={method}
+                  onChange={(e) => setMethod(e.target.value)}
+                >
+                  <option value="">Select...</option>
+                  <option value="bKash">bKash</option>
+                  <option value="Nagad">Nagad</option>
+                  <option value="Rocket">Rocket</option>
+                  <option value="Card">Card</option>
+                </select>
+
+                <input
+                  type="text"
+                  className="form-control mb-3"
+                  placeholder={
+                    ["bKash", "Nagad", "Rocket"].includes(method)
+                      ? "Enter Mobile Number"
+                      : "Enter Card/ID Number"
+                  }
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                />
+
+                <button
+                  className="btn btn-success w-100"
+                  onClick={handleSendOtp}
+                  disabled={loading}
+                >
+                  {loading ? "Sending OTP..." : "Send OTP"}
+                </button>
+              </>
+            ) : (
+              <>
+                <p>
+                  OTP sent to <strong>{email}</strong>. Enter it below:
+                </p>
+                <input
+                  type="text"
+                  className="form-control mb-3"
+                  placeholder="Enter OTP"
+                  value={otpInput}
+                  onChange={(e) => setOtpInput(e.target.value)}
+                />
+                <button
+                  className="btn btn-success w-100"
+                  onClick={handleVerifyOtp}
+                >
+                  Verify OTP & Confirm Payment
+                </button>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </div>
   );
 }
-
-export default PaymentModal;
