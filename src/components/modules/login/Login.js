@@ -26,7 +26,7 @@ function Login({ setUser }) {
       }
 
       // ✅ Save JWT tokens in localStorage (for Dashboard.js)
-      localStorage.setItem("token", data.access_token); // add this
+      localStorage.setItem("token", data.access_token); 
       localStorage.setItem("accessToken", data.access_token);
       localStorage.setItem("refreshToken", data.refresh_token);
 

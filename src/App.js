@@ -18,6 +18,8 @@ import UserProfile from "./components/modules/userProfile";
 import PrivateRoute from "./components/modules/privateRoute";
 import SlotDetails from "./components/modules/dashboard/SlotDetails";
 import Author from "./components/modules/authority";
+// At the top with other imports
+import OAuthRedirect from "./components/modules/OAuthRedirect";
 
 function App() {
   // Load user from localStorage
@@ -66,6 +68,10 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/contact" element={<ContactUs />} />
         <Route path="/author" element={<Author />} />
+        <Route
+          path="/oauth2/redirect"
+          element={<OAuthRedirect setUser={setUser} />}
+        />
 
         {/* Private routes */}
         <Route
