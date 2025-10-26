@@ -1,57 +1,123 @@
-/* SlotDetails.css */
-
+/* Container */
 .slot-details-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 80vh; /* Adjust for better center alignment */
+  min-height: 80vh;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8f9fa;
+  padding: 2rem;
 }
 
-.details-card {
+/* Card */
+.slot-details-container .card {
   max-width: 600px;
   width: 100%;
-  border: 1px solid #dc3545; /* Red border for booked status */
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  background-color: #fff;
+  transition: transform 0.2s ease-in-out;
 }
 
-.details-card .card-header {
-  background-color: #dc3545 !important;
-  border-bottom: 3px solid #b02a37;
+.slot-details-container .card:hover {
+  transform: translateY(-5px);
 }
 
-.slot-id {
-  font-size: 1.5em;
-  font-weight: bold;
+/* Card Header */
+.slot-details-container .card-header {
+  background-color: #dc3545; /* red */
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 600;
+  padding: 1rem;
+  text-align: center;
+  letter-spacing: 1px;
 }
 
-.status-booked {
+/* Card Body */
+.slot-details-container .card-body {
+  padding: 1.5rem;
+}
+
+.slot-details-container .card-body ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.slot-details-container .card-body li {
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.slot-details-container .card-body li strong {
+  font-weight: 600;
+  color: #495057;
+}
+
+/* Optional: hover effect on list items */
+.slot-details-container .card-body li:hover {
+  background-color: #f1f3f5;
+}
+
+/* Divider */
+.slot-details-container hr {
+  border: none;
+  border-top: 1px solid #dee2e6;
+  margin: 1rem 0;
+}
+
+/* Card Footer */
+.slot-details-container .card-footer {
+  padding: 1rem;
+  text-align: center;
+  background-color: #f8f9fa;
+}
+
+.slot-details-container .card-footer .btn {
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 8px;
+  padding: 0.5rem 1.2rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.slot-details-container .card-footer .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Remaining Time */
+.slot-details-container li strong + span,
+.slot-details-container li strong + p {
+  color: #212529;
+}
+
+/* Status Highlight */
+.slot-details-container li:nth-child(1) {
+  font-weight: 600;
   color: #dc3545;
-  font-weight: bold;
-  text-transform: uppercase;
-  border-bottom: 2px solid #eee;
-  padding-bottom: 10px;
 }
 
-.detail-list li {
-  padding: 8px 0;
-  font-size: 1.1em;
-  border-bottom: 1px dotted #e9ecef;
-}
+/* Responsive */
+@media (max-width: 768px) {
+  .slot-details-container {
+    padding: 1rem;
+  }
 
-.detail-list li:last-child {
-  border-bottom: none;
-}
+  .slot-details-container .card {
+    width: 100%;
+  }
 
-.detail-list strong {
-  display: inline-block;
-  min-width: 180px; /* Align key/value pairs */
-  color: #343a40;
-}
-
-.timer {
-  font-weight: bold;
-  font-size: 1.2em;
-}
-
-.details-card .card-footer button {
-  padding: 10px 30px;
+  .slot-details-container .card-body li {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

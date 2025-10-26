@@ -17,26 +17,31 @@ import Features from "./components/modules/features";
 import UserProfile from "./components/modules/userProfile";
 import PrivateRoute from "./components/modules/privateRoute";
 import SlotDetails from "./components/modules/dashboard/SlotDetails";
-import Author from "./components/modules/authority"; // uses index.js
+import Author from "./components/modules/authority";
 
 function App() {
   // Load user from localStorage
-  const [user, setUser] = useState(
-    JSON.parse(localStorage.getItem("loggedInUser")) || null
-  );
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem("loggedInUser");
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
 
-  // Slots state is lifted to App.js
-  const [slots, setSlots] = useState(
-    JSON.parse(localStorage.getItem("slots")) ||
-      Array.from({ length: 6 }, (_, i) => ({
-        id: i + 1,
-        available: true,
-        start: null,
-        end: null,
-        notified: false,
-        email: "",
-      }))
-  );
+  // Slots state
+  const [slots, setSlots] = useState(() => {
+    const savedSlots = localStorage.getItem("slots");
+    if (savedSlots) return JSON.parse(savedSlots);
+    return Array.from({ length: 8 }, (_, i) => ({
+      id: i + 1,
+      available: true,
+      start: null,
+      end: null,
+      notified: false,
+      email: "",
+      contactNumber: "",
+      totalCost: null,
+      paymentMethod: null,
+    }));
+  });
 
   // Persist user
   useEffect(() => {
@@ -66,31 +71,47 @@ function App() {
         <Route
           path="/dashboard"
           element={
-            <PrivateRoute
-              element={
-                <Dashboard
-                  user={user}
-                  setUser={setUser}
-                  slots={slots}
-                  setSlots={setSlots}
-                />
-              }
-            />
+            <PrivateRoute>
+              <Dashboard
+                user={user}
+                setUser={setUser}
+                slots={slots}
+                setSlots={setSlots}
+              />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/features"
+          element={
+            <PrivateRoute>
+              <Features />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <UserProfile user={user} setUser={setUser} />
+            </PrivateRoute>
           }
         />
         <Route
           path="/test-email"
-          element={<PrivateRoute element={<TestEmail />} />}
-        />
-        <Route path="/slot/:id" element={<SlotDetails slots={slots} />} />
-
-        <Route
-          path="/features"
-          element={<PrivateRoute element={<Features />} />}
+          element={
+            <PrivateRoute>
+              <TestEmail />
+            </PrivateRoute>
+          }
         />
         <Route
-          path="/profile"
-          element={<PrivateRoute element={<UserProfile />} />}
+          path="/slot/:id"
+          element={
+            <PrivateRoute>
+              <SlotDetails slots={slots} />
+            </PrivateRoute>
+          }
         />
       </Routes>
 

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-
 export default function BookingModal({
   slot,
   setShowBooking,

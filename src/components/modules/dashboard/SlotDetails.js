@@ -1,113 +1,87 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import "./SlotDetails.css"; // Import the specific CSS
+import "./SlotDetails.css";
 
 export default function SlotDetails({ slots }) {
   const { id } = useParams();
   const navigate = useNavigate();
   const slot = slots.find((s) => String(s.id) === id);
-  const [remainingTime, setRemainingTime] = useState(null);
+  const [remainingTime, setRemainingTime] = useState("");
 
-  // Calculate remaining time and update every second
   useEffect(() => {
-    if (!slot || slot.available || !slot.end) {
-      setRemainingTime(null);
-      return;
-    }
-
-    const calculateRemaining = () => {
-      const remainingMs = new Date(slot.end) - new Date();
-      if (remainingMs <= 0) {
-        setRemainingTime("Expired");
-        return;
-      }
-      const totalSeconds = Math.floor(remainingMs / 1000);
-      const minutes = Math.floor(totalSeconds / 60);
-      const seconds = totalSeconds % 60;
-      setRemainingTime(`${minutes}m ${seconds}s`);
+    if (!slot || slot.available || !slot.end) return;
+    const update = () => {
+      const ms = new Date(slot.end) - new Date();
+      if (ms <= 0) return setRemainingTime("Expired");
+      const mins = Math.floor(ms / 60000);
+      const secs = Math.floor((ms % 60000) / 1000);
+      setRemainingTime(`${mins}m ${secs}s`);
     };
-
-    calculateRemaining();
-    const interval = setInterval(calculateRemaining, 1000);
-
+    update();
+    const interval = setInterval(update, 1000);
     return () => clearInterval(interval);
   }, [slot]);
 
-  // Handle cases where the slot is not found or is available
-  if (!slot) {
+  if (!slot)
     return (
-      <div className="slot-details-container p-5 text-center">
+      <div className="slot-details-container text-center p-5">
         <h2>Slot Not Found 😔</h2>
         <button className="btn btn-primary mt-3" onClick={() => navigate("/")}>
           Go to Dashboard
         </button>
       </div>
     );
-  }
 
-  if (slot.available) {
+  if (slot.available)
     return (
-      <div className="slot-details-container p-5 text-center">
+      <div className="slot-details-container text-center p-5">
         <h2>Slot {slot.id} is Available! 🥳</h2>
-        <p>Bookings are only visible for booked slots.</p>
         <button className="btn btn-primary mt-3" onClick={() => navigate("/")}>
           Go to Dashboard
         </button>
       </div>
     );
-  }
 
-  // Format times
-  const startTimeStr = slot.start
-    ? new Date(slot.start).toLocaleTimeString("en-US", {
-        hour: "2-digit",
-        minute: "2-digit",
-      })
-    : "N/A";
-  const endTimeStr = slot.end
-    ? new Date(slot.end).toLocaleTimeString("en-US", {
-        hour: "2-digit",
-        minute: "2-digit",
-      })
-    : "N/A";
-
-  const contactNumberMasked = slot.contactNumber
-    ? slot.contactNumber.replace(/(\d{3})\d{4}(\d{3})/, "$1XXXX$2")
-    : "N/A";
+  const formatTime = (t) =>
+    t
+      ? new Date(t).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+      : "N/A";
+  const maskContact = (n) =>
+    n ? n.replace(/(\d{3})\d{4}(\d{3})/, "$1XXXX$2") : "N/A";
 
   return (
     <div className="slot-details-container container my-5">
-      <div className="card shadow-lg details-card">
-        <div className="card-header bg-danger text-white text-center rounded-top-4">
-          <h2 className="mb-0">
-            Booking Details for Slot <span className="slot-id">{slot.id}</span>
-          </h2>
+      <div className="card shadow-lg">
+        <div className="card-header bg-danger text-white text-center">
+          <h2>Booking Details - Slot {slot.id}</h2>
         </div>
-        <div className="card-body p-4">
-          <h3 className="status-booked mb-4">Status: Booked</h3>
-
-          <ul className="list-unstyled detail-list">
+        <div className="card-body">
+          <ul className="list-unstyled">
             <li>
-              <strong>Start Time:</strong> {startTimeStr}
+              <strong>Status:</strong> Booked
             </li>
             <li>
-              <strong>End Time:</strong> {endTimeStr}
+              <strong>Start Time:</strong> {formatTime(slot.start)}
+            </li>
+            <li>
+              <strong>End Time:</strong> {formatTime(slot.end)}
             </li>
             <li>
               <strong>Remaining Time:</strong>{" "}
-              <span className="timer text-danger">
-                {remainingTime || "Calculating..."}
-              </span>
+              {remainingTime || "Calculating..."}
             </li>
             <hr />
             <li>
-              <strong>Booked By (Email):</strong> {slot.email || "N/A"}
+              <strong>Email:</strong> {slot.email || "N/A"}
             </li>
             <li>
-              <strong>Contact Number:</strong> {contactNumberMasked}
+              <strong>Contact:</strong> {maskContact(slot.contactNumber)}
             </li>
             <li>
-              <strong>Total Paid:</strong> ৳{slot.totalCost || "N/A"}
+              <strong>Total Paid:</strong> ৳{slot.totalCost}
             </li>
             <li>
               <strong>Payment Method:</strong> {slot.paymentMethod || "N/A"}

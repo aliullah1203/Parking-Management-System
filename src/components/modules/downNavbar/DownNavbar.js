@@ -9,7 +9,7 @@ function DownNavbar() {
         <div className="row">
           {/* Logo & Description */}
           <div className="col-md-4 mb-4">
-            <h3 className="footer-logo">Smart Parking</h3>
+            <h3 className="footer-logo">Smart Parking Management System</h3>
             <p className="footer-description">
               Efficiently manage parking slots, reserve your spot, and pay
               securely.
@@ -89,7 +89,8 @@ function DownNavbar() {
 
         <hr className="footer-divider" />
         <div className="copyright">
-          &copy; {new Date().getFullYear()} Smart Parking. All rights reserved.
+          &copy; {new Date().getFullYear()} Smart Parking Management System. All
+          rights reserved.
         </div>
       </div>
     </footer>
