@@ -1,72 +1,57 @@
+/* SlotDetails.css */
+
 .slot-details-container {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #f0f9ff, #cbebff);
   display: flex;
-  align-items: center;
   justify-content: center;
-  padding: 40px 20px;
+  align-items: center;
+  min-height: 80vh; /* Adjust for better center alignment */
 }
 
 .details-card {
-  background: #ffffff;
-  border-radius: 20px;
-  padding: 40px 30px;
-  max-width: 500px;
+  max-width: 600px;
   width: 100%;
-  transition: all 0.3s ease;
+  border: 1px solid #dc3545; /* Red border for booked status */
 }
 
-.details-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+.details-card .card-header {
+  background-color: #dc3545 !important;
+  border-bottom: 3px solid #b02a37;
 }
 
-.slot-info {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+.slot-id {
+  font-size: 1.5em;
+  font-weight: bold;
 }
 
-.info-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 1rem;
-  border-bottom: 1px solid #eaeaea;
-  padding-bottom: 8px;
+.status-booked {
+  color: #dc3545;
+  font-weight: bold;
+  text-transform: uppercase;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
 }
 
-.status-badge {
-  padding: 6px 12px;
-  border-radius: 12px;
-  font-weight: 600;
-  color: white;
+.detail-list li {
+  padding: 8px 0;
+  font-size: 1.1em;
+  border-bottom: 1px dotted #e9ecef;
 }
 
-.status-badge.available {
-  background-color: #28a745;
+.detail-list li:last-child {
+  border-bottom: none;
 }
 
-.status-badge.booked {
-  background-color: #dc3545;
+.detail-list strong {
+  display: inline-block;
+  min-width: 180px; /* Align key/value pairs */
+  color: #343a40;
 }
 
-.text-success {
-  color: #28a745 !important;
+.timer {
+  font-weight: bold;
+  font-size: 1.2em;
 }
 
-.text-danger {
-  color: #dc3545 !important;
-}
-
-.btn-primary {
-  border-radius: 12px;
-  background-color: #007bff;
-  border: none;
-  transition: all 0.3s;
-}
-
-.btn-primary:hover {
-  background-color: #0056b3;
-  transform: scale(1.05);
+.details-card .card-footer button {
+  padding: 10px 30px;
 }

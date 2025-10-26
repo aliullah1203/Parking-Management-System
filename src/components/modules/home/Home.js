@@ -8,7 +8,10 @@ function Home() {
     <div className="home-hero">
       {/* Hero Section */}
       <div className="container text-center text-white d-flex flex-column justify-content-center align-items-center hero-content">
-        <h1 className="display-4 fw-bold mb-3">Smart Parking Management</h1>
+        <h1 className="display-4 fw-bold mb-3">
+          IoT-based Smart Parking Management System for Traffic Jam Reduction in
+          Dhaka City
+        </h1>
         <p className="lead mb-4">
           Reserve parking slots, manage time efficiently, and pay securely.
         </p>

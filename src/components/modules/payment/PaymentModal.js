@@ -1,7 +1,6 @@
-// src/components/payment/PaymentModal.js
 import React, { useState } from "react";
 import emailjs from "emailjs-com";
-import "./PaymentModal.css";
+import "./PaymentModal.css"; // Assuming this is present
 
 const SERVICE_ID = "service_2qnaxle";
 const TEMPLATE_ID = "template_odjrkda";
@@ -13,7 +12,8 @@ export default function PaymentModal({
   onPaymentSuccess,
 }) {
   const [method, setMethod] = useState("");
-  const [inputValue, setInputValue] = useState("");
+  // Use data from slot if it exists, otherwise initialize empty
+  const [contactNumber, setContactNumber] = useState(slot?.contactNumber || "");
   const [email, setEmail] = useState(slot?.email || "");
   const [otpSent, setOtpSent] = useState(false);
   const [otpInput, setOtpInput] = useState("");
@@ -21,6 +21,8 @@ export default function PaymentModal({
   const [loading, setLoading] = useState(false);
 
   if (!slot || !slot.id) return null;
+
+  const totalCost = slot.totalCost || 0;
 
   const generateOtp = () => String(Math.floor(100000 + Math.random() * 900000));
 
@@ -31,10 +33,9 @@ export default function PaymentModal({
   };
 
   const handleSendOtp = async () => {
-    if (!email.trim() || !method.trim() || !inputValue.trim()) {
+    if (!email.trim() || !method.trim() || !contactNumber.trim()) {
       return alert("Please fill all required fields.");
     }
-
     const otp = generateOtp();
     setGeneratedOtp(otp);
     setLoading(true);
@@ -53,9 +54,9 @@ export default function PaymentModal({
 
   const handleVerifyOtp = () => {
     if (otpInput.trim() === generatedOtp) {
-      alert("✅ Payment verified! Booking confirmed.");
-      onPaymentSuccess(slot.id, slot.start, slot.end, email, inputValue); // you can store payment info
-      setShowPayment(false);
+      alert(`✅ Payment verified! Total Paid: ৳${totalCost}`);
+      // 🚩 Updated call to onPaymentSuccess with all necessary data
+      onPaymentSuccess(slot.id, email, contactNumber, totalCost, method);
     } else {
       alert("❌ Invalid OTP. Please try again.");
     }
@@ -64,28 +65,32 @@ export default function PaymentModal({
   return (
     <div className="modal-overlay" onClick={() => setShowPayment(false)}>
       <div className="modal-dialog" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-content rounded-4 shadow-lg">
+        <div className className="modal-content rounded-4 shadow-lg">
           <div className="modal-header bg-primary text-white rounded-top-4">
             <h5 className="modal-title">Payment for Slot {slot.id}</h5>
             <button
               type="button"
               className="btn-close btn-close-white"
               onClick={() => setShowPayment(false)}
+              aria-label="Close"
             />
           </div>
 
           <div className="modal-body">
+            <p className="fw-semibold text-center mb-3">
+              💰 Total Amount:{" "}
+              <span className="text-success">৳{totalCost}</span>
+            </p>
+
             {!otpSent ? (
               <>
                 <label>Email</label>
                 <input
                   type="email"
                   className="form-control mb-3"
-                  placeholder="Enter your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
-
                 <label>Payment Method</label>
                 <select
                   className="form-select mb-3"
@@ -98,7 +103,6 @@ export default function PaymentModal({
                   <option value="Rocket">Rocket</option>
                   <option value="Card">Card</option>
                 </select>
-
                 <input
                   type="text"
                   className="form-control mb-3"
@@ -107,14 +111,13 @@ export default function PaymentModal({
                       ? "Enter Mobile Number"
                       : "Enter Card/ID Number"
                   }
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
+                  value={contactNumber}
+                  onChange={(e) => setContactNumber(e.target.value)}
                 />
-
                 <button
                   className="btn btn-success w-100"
                   onClick={handleSendOtp}
-                  disabled={loading}
+                  disabled={loading || !method || !contactNumber || !email}
                 >
                   {loading ? "Sending OTP..." : "Send OTP"}
                 </button>
@@ -127,9 +130,9 @@ export default function PaymentModal({
                 <input
                   type="text"
                   className="form-control mb-3"
-                  placeholder="Enter OTP"
                   value={otpInput}
                   onChange={(e) => setOtpInput(e.target.value)}
+                  placeholder="Enter OTP"
                 />
                 <button
                   className="btn btn-success w-100"

@@ -4,6 +4,7 @@ import PaymentModal from "../payment/PaymentModal";
 import emailjs from "emailjs-com";
 import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
+import LocalStorageBackup from "../../utils/LocalStorageBackup";
 
 const SERVICE_ID = "service_2qnaxle";
 const TEMPLATE_ID = "template_kefhnlb";
@@ -16,15 +17,16 @@ export default function Dashboard({ user, setUser, slots, setSlots }) {
   const [time, setTime] = useState(new Date());
   const navigate = useNavigate();
 
-  // Live Clock
+  // 🕒 Live clock update
   useEffect(() => {
-    const t = setInterval(() => setTime(new Date()), 1000);
-    return () => clearInterval(t);
+    const timer = setInterval(() => setTime(new Date()), 1000);
+    return () => clearInterval(timer);
   }, []);
 
-  // Auto-reset expired slots + Send reminder emails
+  // ⏰ Auto-reset expired slots + Send reminder emails
   useEffect(() => {
     const updatedSlots = slots.map((slot) => {
+      // Reset expired slots
       if (!slot.available && slot.end && new Date(slot.end) <= time) {
         return {
           ...slot,
@@ -32,10 +34,14 @@ export default function Dashboard({ user, setUser, slots, setSlots }) {
           start: null,
           end: null,
           email: null,
+          contactNumber: null,
+          totalCost: null,
+          paymentMethod: null,
           notified: false,
         };
       }
 
+      // Send 30-min reminder email
       if (!slot.available && !slot.notified && slot.end) {
         const remaining = (new Date(slot.end) - time) / 60000;
         if (remaining > 0 && remaining <= 30) {
@@ -55,6 +61,7 @@ export default function Dashboard({ user, setUser, slots, setSlots }) {
           return { ...slot, notified: true };
         }
       }
+
       return slot;
     });
 
@@ -63,16 +70,34 @@ export default function Dashboard({ user, setUser, slots, setSlots }) {
     }
   }, [time, slots, setSlots]);
 
+  // 📅 Book slot handler
   const handleBook = (slot) => {
     setSelectedSlot(slot);
     setShowBooking(true);
   };
 
-  const handlePaymentSuccess = (id, start, end, email) => {
+  // 💰 Payment success update
+  const handlePaymentSuccess = (
+    id,
+    email,
+    contactNumber,
+    totalCost,
+    paymentMethod
+  ) => {
     setSlots((prev) =>
       prev.map((s) =>
         s.id === id
-          ? { ...s, available: false, start, end, notified: false, email }
+          ? {
+              ...s,
+              available: false,
+              start: selectedSlot.start,
+              end: selectedSlot.end,
+              email,
+              contactNumber,
+              totalCost,
+              paymentMethod,
+              notified: false,
+            }
           : s
       )
     );
@@ -80,22 +105,22 @@ export default function Dashboard({ user, setUser, slots, setSlots }) {
     navigate(`/slot/${id}`);
   };
 
+  // 🧮 Slot summary
   const availableSlots = slots.filter((s) => s.available).map((s) => s.id);
   const bookedSlots = slots.filter((s) => !s.available).map((s) => s.id);
 
   return (
     <div className="dashboard-container">
-      {/* Header */}
+      {/* 🏁 Header */}
       <header className="dashboard-header text-center mb-5">
         <h1>🚗 Parking Management Dashboard</h1>
         <p className="subtitle">
-          Welcome back, <strong>{user?.name || user?.email || "Guest"}</strong>{" "}
-          👋
+          Welcome, <strong>{user?.name || user?.email || "Guest"}</strong> 👋
         </p>
         <p className="time-display">{time.toLocaleTimeString()}</p>
       </header>
 
-      {/* Summary Section */}
+      {/* 📊 Parking Slot Summary */}
       <section className="status-summary mb-5">
         <h3 className="section-title">📊 Parking Slot Summary</h3>
         <div className="summary-table shadow-sm">
@@ -127,7 +152,7 @@ export default function Dashboard({ user, setUser, slots, setSlots }) {
         </div>
       </section>
 
-      {/* Slot Grid */}
+      {/* 🅿️ Slot Grid */}
       <section className="slot-grid">
         {slots.map((slot) => (
           <div
@@ -155,7 +180,7 @@ export default function Dashboard({ user, setUser, slots, setSlots }) {
         ))}
       </section>
 
-      {/* Modals */}
+      {/* 🪟 Booking Modal */}
       {showBooking && (
         <BookingModal
           slot={selectedSlot}
@@ -167,14 +192,17 @@ export default function Dashboard({ user, setUser, slots, setSlots }) {
         />
       )}
 
+      {/* 💳 Payment Modal */}
       {showPayment && (
         <PaymentModal
           slot={selectedSlot}
           setShowPayment={setShowPayment}
           onPaymentSuccess={handlePaymentSuccess}
-          userEmail={user?.email}
         />
       )}
+
+      {/* 🗂 Backup/Restore Feature */}
+      <LocalStorageBackup />
     </div>
   );
 }

@@ -1,29 +1,32 @@
-.modal-backdrop {
+/* Overlay for modal */
+.modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.6);
+  background-color: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1050;
 }
 
+/* Modal box */
 .modal-dialog {
   max-width: 450px;
   width: 90%;
 }
 
+/* Modal content */
 .modal-content {
   background-color: #fff;
   border-radius: 16px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-  padding: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
   overflow: hidden;
 }
 
+/* Modal header */
 .modal-header {
   display: flex;
   justify-content: space-between;
@@ -31,7 +34,6 @@
   background-color: #0d6efd;
   color: #fff;
   padding: 12px 20px;
-  border-radius: 12px 12px 0 0;
 }
 
 .modal-header h5 {
@@ -40,6 +42,7 @@
   font-size: 1.25rem;
 }
 
+/* Close button */
 .btn-close {
   background: transparent;
   border: none;
@@ -48,16 +51,19 @@
   cursor: pointer;
 }
 
+/* Modal body */
 .modal-body {
   padding: 20px;
 }
 
+/* Labels */
 .modal-body label {
   font-weight: 500;
   margin-bottom: 5px;
   display: block;
 }
 
+/* Inputs and select */
 .modal-body input,
 .modal-body select {
   width: 100%;
@@ -76,6 +82,7 @@
   box-shadow: 0 0 5px rgba(13, 110, 253, 0.4);
 }
 
+/* Buttons */
 .btn {
   width: 100%;
   padding: 10px 0;
@@ -95,20 +102,31 @@
   background-color: #218838;
 }
 
-.btn-outline-light {
-  background-color: #ffc0c0;
-  color: #333;
+.btn-secondary {
+  background-color: #6c757d;
+  color: #fff;
   border: none;
 }
 
-.btn-outline-light:hover {
-  background-color: #ff9999;
-  color: #fff;
+.btn-secondary:hover {
+  background-color: #5a6268;
 }
 
+/* OTP message */
 .otp-message {
   font-size: 0.95rem;
   color: #555;
   margin-bottom: 10px;
 }
 
+/* Total amount badge */
+.text-success {
+  font-weight: 600;
+}
+
+/* Responsive adjustments */
+@media (max-width: 500px) {
+  .modal-dialog {
+    width: 95%;
+  }
+}

@@ -13,7 +13,7 @@ function Author() {
       name: "Ali Ullah",
       image: ali,
       description:
-        "Software Engineer @ Luciety | Competitive Programmer | JavaScript | React.js | Operating Systems | MySQL | Git,Github | Golang | Backend Developer | Docker | UITS",
+        "Software Engineer @ Luciety | Competitive Programmer | JavaScript | React.js | Operating Systems | MySQL | PostgreSQL | Git,Github | Golang | Backend Developer | Docker | UITS",
     },
     {
       name: "Xarin Tasneem Shatubdee",
@@ -31,7 +31,7 @@ function Author() {
       name: "Md. Jahidul Islam Sagor ",
       image: jahidul,
       description:
-        "B.Sc. in CSE | Problem Solver | Data Structure & Algorithms | Python | Go | Aspiring to ML & AI Enthusiast | Aspiring to Data Science | Student at University of Information Technology & Sciences (UITS)",
+        "B.Sc. in CSE | Problem Solver | Data Structure & Algorithms | Python | Go | Aspiring to ML & AI Enthusiast | Aspiring to Data Science | Student at University of Information Technology & Sciences",
     },
   ];
   const Sir = [

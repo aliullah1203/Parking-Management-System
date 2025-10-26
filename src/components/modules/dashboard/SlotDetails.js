@@ -1,109 +1,129 @@
-// src/components/dashboard/SlotDetails.js
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import "./SlotDetails.css";
+import "./SlotDetails.css"; // Import the specific CSS
 
 export default function SlotDetails({ slots }) {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [time, setTime] = useState(new Date());
+  const slot = slots.find((s) => String(s.id) === id);
+  const [remainingTime, setRemainingTime] = useState(null);
 
-  // Find slot by string ID
-  const slot = slots.find((s) => s.id === id);
-
-  // Update current time every second for live countdown
+  // Calculate remaining time and update every second
   useEffect(() => {
-    const timer = setInterval(() => setTime(new Date()), 1000);
-    return () => clearInterval(timer);
-  }, []);
+    if (!slot || slot.available || !slot.end) {
+      setRemainingTime(null);
+      return;
+    }
 
+    const calculateRemaining = () => {
+      const remainingMs = new Date(slot.end) - new Date();
+      if (remainingMs <= 0) {
+        setRemainingTime("Expired");
+        return;
+      }
+      const totalSeconds = Math.floor(remainingMs / 1000);
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+      setRemainingTime(`${minutes}m ${seconds}s`);
+    };
+
+    calculateRemaining();
+    const interval = setInterval(calculateRemaining, 1000);
+
+    return () => clearInterval(interval);
+  }, [slot]);
+
+  // Handle cases where the slot is not found or is available
   if (!slot) {
     return (
-      <div className="container text-center mt-5">
-        <h3>❌ Slot not found</h3>
-        <button
-          className="btn btn-primary mt-3"
-          onClick={() => navigate("/dashboard")}
-        >
-          Back to Dashboard
+      <div className="slot-details-container p-5 text-center">
+        <h2>Slot Not Found 😔</h2>
+        <button className="btn btn-primary mt-3" onClick={() => navigate("/")}>
+          Go to Dashboard
         </button>
       </div>
     );
   }
 
-  const formatTime = (t) =>
-    t
-      ? new Date(t).toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        })
-      : "-";
+  if (slot.available) {
+    return (
+      <div className="slot-details-container p-5 text-center">
+        <h2>Slot {slot.id} is Available! 🥳</h2>
+        <p>Bookings are only visible for booked slots.</p>
+        <button className="btn btn-primary mt-3" onClick={() => navigate("/")}>
+          Go to Dashboard
+        </button>
+      </div>
+    );
+  }
 
-  const remainingTime = (end) => {
-    if (!end) return "-";
-    const diff = new Date(end) - time;
-    if (diff <= 0) return "Expired";
-    const mins = Math.floor(diff / 60000);
-    const secs = Math.floor((diff % 60000) / 1000);
-    return `${mins}m ${secs}s`;
-  };
+  // Format times
+  const startTimeStr = slot.start
+    ? new Date(slot.start).toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : "N/A";
+  const endTimeStr = slot.end
+    ? new Date(slot.end).toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : "N/A";
+
+  const contactNumberMasked = slot.contactNumber
+    ? slot.contactNumber.replace(/(\d{3})\d{4}(\d{3})/, "$1XXXX$2")
+    : "N/A";
 
   return (
-    <div className="slot-details-container">
-      <div className="details-card shadow-lg">
-        <h2 className="text-center mb-4 fw-bold">🅿️ Slot Details</h2>
-
-        <div className="slot-info">
-          <div className="info-row">
-            <span>Slot ID:</span>
-            <strong>{slot.id}</strong>
-          </div>
-
-          <div className="info-row">
-            <span>Status:</span>
-            <span
-              className={`status-badge ${
-                slot.available ? "available" : "booked"
-              }`}
-            >
-              {slot.available ? "Available" : "Booked"}
-            </span>
-          </div>
-
-          <div className="info-row">
-            <span>Start Time:</span>
-            <strong>{formatTime(slot.start)}</strong>
-          </div>
-
-          <div className="info-row">
-            <span>End Time:</span>
-            <strong>{formatTime(slot.end)}</strong>
-          </div>
-
-          <div className="info-row">
-            <span>Remaining Time:</span>
-            <strong>{slot.available ? "-" : remainingTime(slot.end)}</strong>
-          </div>
-
-          <div className="info-row">
-            <span>Booked By:</span>
-            <strong>{slot.email || "N/A"}</strong>
-          </div>
-
-          <div className="info-row">
-            <span>Notified:</span>
-            <strong className={slot.notified ? "text-success" : "text-danger"}>
-              {slot.notified ? "✅ Yes" : "❌ No"}
-            </strong>
-          </div>
+    <div className="slot-details-container container my-5">
+      <div className="card shadow-lg details-card">
+        <div className="card-header bg-danger text-white text-center rounded-top-4">
+          <h2 className="mb-0">
+            Booking Details for Slot <span className="slot-id">{slot.id}</span>
+          </h2>
         </div>
+        <div className="card-body p-4">
+          <h3 className="status-booked mb-4">Status: Booked</h3>
 
-        <div className="text-center mt-4">
+          <ul className="list-unstyled detail-list">
+            <li>
+              <strong>Start Time:</strong> {startTimeStr}
+            </li>
+            <li>
+              <strong>End Time:</strong> {endTimeStr}
+            </li>
+            <li>
+              <strong>Remaining Time:</strong>{" "}
+              <span className="timer text-danger">
+                {remainingTime || "Calculating..."}
+              </span>
+            </li>
+            <hr />
+            <li>
+              <strong>Booked By (Email):</strong> {slot.email || "N/A"}
+            </li>
+            <li>
+              <strong>Contact Number:</strong> {contactNumberMasked}
+            </li>
+            <li>
+              <strong>Total Paid:</strong> ৳{slot.totalCost || "N/A"}
+            </li>
+            <li>
+              <strong>Payment Method:</strong> {slot.paymentMethod || "N/A"}
+            </li>
+            <li>
+              <strong>Reminder Notified:</strong>{" "}
+              {slot.notified ? "✅ Yes" : "❌ No"}
+            </li>
+          </ul>
+        </div>
+        <div className="card-footer text-center">
           <button
-            className="btn btn-primary px-4 py-2 fw-semibold"
+            className="btn btn-primary"
             onClick={() => navigate("/dashboard")}
           >
-            ← Back to Dashboard
+            Back to Dashboard
           </button>
         </div>
       </div>
